@@ -1,14 +1,15 @@
 [gd_scene load_steps=4 format=3 uid="uid://d0oqoinq0s2fd"]
 
-[ext_resource type="Texture2D" uid="uid://sml5bdmbeblw" path="res://icon.svg" id="1_w7c1k"]
 [ext_resource type="Script" path="res://enemy.gd" id="2_3imoh"]
+[ext_resource type="Texture2D" uid="uid://bn0ud7wo12d74" path="res://kenney_top-down-tanks-redux/PNG/Default size/tank_red.png" id="2_nv0d3"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxrth"]
-size = Vector2(128, 128)
+size = Vector2(42, 46)
 
 [node name="Enemy" type="RigidBody2D" node_paths=PackedStringArray("visuals") groups=["enemies"]]
-collision_mask = 9
+collision_mask = 8
 gravity_scale = 0.0
+lock_rotation = true
 script = ExtResource("2_3imoh")
 visuals = NodePath("Visuals")
 metadata/_edit_lock_ = true
@@ -16,14 +17,21 @@ metadata/_edit_group_ = true
 
 [node name="Visuals" type="Sprite2D" parent="."]
 modulate = Color(0.639216, 0.278431, 1, 1)
-texture = ExtResource("1_w7c1k")
-
-[node name="BaseballBat" type="Sprite2D" parent="Visuals"]
-position = Vector2(99, -2)
-rotation = -0.479966
-scale = Vector2(1, 0.1)
-texture = ExtResource("1_w7c1k")
+texture = ExtResource("2_nv0d3")
+flip_v = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_rxrth")
 debug_color = Color(0.945308, 0.194628, 0.340541, 0.42)
+
+[node name="MoveCooldownTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="RotateCooldownTimer" type="Timer" parent="."]
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="MoveCooldownTimer" to="." method="_on_move_cooldown_timer_timeout"]
+[connection signal="timeout" from="RotateCooldownTimer" to="." method="_on_rotate_cooldown_timer_timeout"]

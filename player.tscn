@@ -1,10 +1,95 @@
-[gd_scene load_steps=4 format=3 uid="uid://d1yuqwj2pnio5"]
+[gd_scene load_steps=8 format=3 uid="uid://d1yuqwj2pnio5"]
 
-[ext_resource type="Texture2D" uid="uid://sml5bdmbeblw" path="res://icon.svg" id="1_3qpp6"]
 [ext_resource type="Script" path="res://player.gd" id="1_6oqx0"]
+[ext_resource type="Texture2D" uid="uid://cqywfm8nh3kde" path="res://kenney_top-down-tanks-redux/PNG/Default size/tank_blue.png" id="2_q51i2"]
+[ext_resource type="Texture2D" uid="uid://bo1kvvv14kkoj" path="res://kenney_top-down-tanks-redux/PNG/Default size/tankBody_blue_outline.png" id="3_to8ke"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ggx1p"]
-size = Vector2(128, 128)
+size = Vector2(42, 46)
+
+[sub_resource type="Animation" id="Animation_8u44q"]
+resource_name = "dead"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("3_to8ke")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.433333, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1, 1), Vector2(0.25, 0.25), Vector2(0.25, 0.25)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_f2k5e"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_q51i2")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:scale")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("CollisionShape2D:disabled")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ui66h"]
+_data = {
+"RESET": SubResource("Animation_f2k5e"),
+"dead": SubResource("Animation_8u44q")
+}
 
 [node name="Player" type="RigidBody2D"]
 collision_layer = 2
@@ -13,16 +98,27 @@ gravity_scale = 0.0
 contact_monitor = true
 max_contacts_reported = 2
 script = ExtResource("1_6oqx0")
+speed = 400
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_3qpp6")
+texture_filter = 1
+texture = ExtResource("2_q51i2")
+flip_v = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ggx1p")
 
 [node name="ShootingCooldownTimer" type="Timer" parent="."]
-wait_time = 5.0
 one_shot = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ui66h")
+}
+
+[node name="BulletSpawnPoint" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -27)
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="ShootingCooldownTimer" to="." method="_on_shooting_cooldown_timer_timeout"]
