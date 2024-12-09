@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://ch3sxei40n2wp"]
+
+[ext_resource type="Script" path="res://bullet.gd" id="1_83ki7"]
+[ext_resource type="Texture2D" uid="uid://sml5bdmbeblw" path="res://icon.svg" id="1_484mo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bh606"]
+size = Vector2(32, 32)
+
+[node name="Bullet" type="RigidBody2D"]
+collision_layer = 4
+collision_mask = 13
+gravity_scale = 0.0
+contact_monitor = true
+max_contacts_reported = 10
+constant_force = Vector2(500, 0)
+script = ExtResource("1_83ki7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.0823529, 0.0588235, 0.0117647, 1)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_484mo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_bh606")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-16, -16, 32, 32)
+
+[node name="SelfdestructTimer" type="Timer" parent="."]
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="timeout" from="SelfdestructTimer" to="." method="_on_selfdestruct_timer_timeout"]

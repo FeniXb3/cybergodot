@@ -1,0 +1,90 @@
+[gd_scene load_steps=9 format=3 uid="uid://ck5aehqi1jqwe"]
+
+[ext_resource type="Script" path="res://level.gd" id="1_2es1j"]
+[ext_resource type="PackedScene" uid="uid://d1yuqwj2pnio5" path="res://player.tscn" id="2_6patx"]
+[ext_resource type="PackedScene" uid="uid://d0oqoinq0s2fd" path="res://enemy.tscn" id="3_fwisg"]
+[ext_resource type="PackedScene" uid="uid://p8fjg7ts6rcy" path="res://game_over_screen.tscn" id="3_uciwg"]
+[ext_resource type="PackedScene" uid="uid://ch3sxei40n2wp" path="res://bullet.tscn" id="4_f5qo6"]
+[ext_resource type="Texture2D" uid="uid://sml5bdmbeblw" path="res://icon.svg" id="6_nkgld"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yuu1f"]
+size = Vector2(128, 768)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bnju7"]
+size = Vector2(768, 128)
+
+[node name="Level" type="Node2D" node_paths=PackedStringArray("game_over_screen")]
+script = ExtResource("1_2es1j")
+game_over_screen = NodePath("CanvasLayer/GameOverScreen")
+enemy_scene = ExtResource("3_fwisg")
+
+[node name="BulletsContainer" type="Node2D" parent="."]
+
+[node name="Player" parent="." node_paths=PackedStringArray("bullets_parent") instance=ExtResource("2_6patx")]
+position = Vector2(137, 206)
+bullet_scene = ExtResource("4_f5qo6")
+bullets_parent = NodePath("../BulletsContainer")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="GameOverScreen" parent="CanvasLayer" instance=ExtResource("3_uciwg")]
+unique_name_in_owner = true
+visible = false
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="EnemySpawnTimer" type="Timer" parent="."]
+wait_time = 5.0
+autostart = true
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="WallLeft" type="StaticBody2D" parent="Walls"]
+collision_layer = 8
+
+[node name="Sprite2D" type="Sprite2D" parent="Walls/WallLeft"]
+position = Vector2(0, 311.5)
+scale = Vector2(1, 6)
+texture = ExtResource("6_nkgld")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallLeft"]
+position = Vector2(0, 312.465)
+shape = SubResource("RectangleShape2D_yuu1f")
+
+[node name="WallRight" type="StaticBody2D" parent="Walls"]
+position = Vector2(1152, 0)
+collision_layer = 8
+
+[node name="Sprite2D" type="Sprite2D" parent="Walls/WallRight"]
+position = Vector2(0, 311.5)
+scale = Vector2(1, 6)
+texture = ExtResource("6_nkgld")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallRight"]
+position = Vector2(0, 312.465)
+shape = SubResource("RectangleShape2D_yuu1f")
+
+[node name="WallBottom" type="StaticBody2D" parent="Walls"]
+position = Vector2(494, 683)
+collision_layer = 8
+
+[node name="Sprite2D" type="Sprite2D" parent="Walls/WallBottom"]
+scale = Vector2(6, 1)
+texture = ExtResource("6_nkgld")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallBottom"]
+shape = SubResource("RectangleShape2D_bnju7")
+
+[node name="WallBottom2" type="StaticBody2D" parent="Walls"]
+position = Vector2(494, -44)
+collision_layer = 8
+
+[node name="Sprite2D" type="Sprite2D" parent="Walls/WallBottom2"]
+scale = Vector2(6, 1)
+texture = ExtResource("6_nkgld")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallBottom2"]
+shape = SubResource("RectangleShape2D_bnju7")
+
+[connection signal="died" from="Player" to="." method="_on_player_died"]
+[connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
