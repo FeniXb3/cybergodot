@@ -1,7 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://d1yuqwj2pnio5"]
+[gd_scene load_steps=9 format=3 uid="uid://d1yuqwj2pnio5"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_6oqx0"]
 [ext_resource type="Texture2D" uid="uid://cqywfm8nh3kde" path="res://kenney_top-down-tanks-redux/PNG/Default size/tank_blue.png" id="2_q51i2"]
+[ext_resource type="Resource" uid="uid://bdm8c02wqc6gk" path="res://player_position.tres" id="2_u166f"]
 [ext_resource type="Texture2D" uid="uid://bo1kvvv14kkoj" path="res://kenney_top-down-tanks-redux/PNG/Default size/tankBody_blue_outline.png" id="3_to8ke"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ggx1p"]
@@ -99,6 +100,7 @@ contact_monitor = true
 max_contacts_reported = 2
 script = ExtResource("1_6oqx0")
 speed = 400
+position_resource = ExtResource("2_u166f")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture_filter = 1
@@ -119,6 +121,12 @@ libraries = {
 [node name="BulletSpawnPoint" type="Marker2D" parent="."]
 unique_name_in_owner = true
 position = Vector2(0, -27)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+drag_vertical_enabled = true
+drag_horizontal_offset = 1.0
+drag_vertical_offset = -1.0
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="ShootingCooldownTimer" to="." method="_on_shooting_cooldown_timer_timeout"]

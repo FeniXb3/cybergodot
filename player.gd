@@ -9,7 +9,7 @@ signal died
 @export var is_dead := false
 @export var can_shoot := true
 @onready var bullet_spawn_point: Marker2D = %BulletSpawnPoint
-
+@export var position_resource: PositionResource
 
 
 # Called when the node enters the scene tree for the first time.
@@ -40,7 +40,8 @@ func _physics_process(delta: float) -> void:
 	angular_velocity = deg_to_rad(200*direction.x)
 	var target_velocity = Vector2(0, clamp(direction.y, -1, 1) * speed)
 	linear_velocity = target_velocity.rotated(rotation)
-	pass
+	position_resource.value = position
+	ResourceSaver.save(position_resource, "user://")
 
 
 func _on_body_entered(body: Node) -> void:

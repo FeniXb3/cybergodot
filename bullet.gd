@@ -7,12 +7,19 @@ func _ready() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("enemies"):
+		$ExplosionAudioStreamPlayer2D.play()
 		body.queue_free()
-		queue_free()
+		hide()
+		die.call_deferred()
+		
+
+		#queue_free()
 	#elif body.is_in_group("walls"):
 	else:
 		$SelfdestructTimer.start()
 
+func die() -> void:
+	process_mode = PROCESS_MODE_DISABLED
 
 func _on_screen_exited() -> void:
 	queue_free()
